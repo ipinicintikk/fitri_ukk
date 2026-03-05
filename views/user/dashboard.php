@@ -28,6 +28,24 @@
                 </div>
             </div>
 
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?php echo $_SESSION['success'];
+    unset($_SESSION['success']); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php
+endif; ?>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?php echo $_SESSION['error'];
+    unset($_SESSION['error']); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php
+endif; ?>
+
             <!-- Intro -->
             <div class="card p-4 gradient-maroon mb-4 border-0">
                 <h4 class="fw-bold">Selamat Datang di Perpustakaan Digital!</h4>
@@ -70,7 +88,19 @@ if (count($new_books) > 0):
                                     <h6 class="fw-bold text-maroon"><?php echo htmlspecialchars($book['judul']); ?></h6>
                                     <p class="text-muted small mb-1">Pengarang: <?php echo htmlspecialchars($book['pengarang']); ?></p>
                                     <p class="text-muted small mb-2">Stok: <?php echo (int)$book['stok']; ?></p>
-                                    <a href="index.php?page=user_buku" class="btn btn-sm btn-maroon text-white">Lihat Detail</a>
+                                    <div class="d-flex gap-2">
+                                        <a href="index.php?page=user_buku" class="btn btn-sm btn-outline-secondary">Detail</a>
+                                        <?php if ($book['stok'] > 0): ?>
+                                            <button class="btn btn-sm btn-maroon text-white flex-grow-1" 
+                                                    onclick="confirmPinjam(<?php echo $book['id_buku']; ?>, '<?php echo addslashes($book['judul']); ?>')">
+                                                Pinjam
+                                            </button>
+                                        <?php
+        else: ?>
+                                            <button class="btn btn-sm btn-secondary disabled flex-grow-1">Habis</button>
+                                        <?php
+        endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -85,5 +115,24 @@ endif; ?>
         </div>
     </div>
 </div>
+
+<script>
+function confirmPinjam(id, judul) {
+    Swal.fire({
+        title: 'Pinjam Buku?',
+        text: "Apakah Anda ingin meminjam '" + judul + "'?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#800000',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Pinjam',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "index.php?action=pinjam_buku&id=" + id + "&from=dashboard";
+        }
+    })
+}
+</script>
 
 <?php include BASE_PATH . '/views/layouts/footer.php'; ?>

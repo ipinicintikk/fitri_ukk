@@ -36,8 +36,10 @@ class Transaksi
             $this->pdo->commit();
             return true;
         }
-        catch (Exception $e) {
-            $this->pdo->rollBack();
+        catch (Throwable $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
             return false;
         }
     }

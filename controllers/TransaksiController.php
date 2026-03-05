@@ -19,7 +19,8 @@ class TransaksiController
         else {
             $_SESSION['error'] = "Gagal meminjam buku! Stok mungkin habis.";
         }
-        header("Location: index.php?page=user_buku");
+        $redirect = isset($_GET['from']) && $_GET['from'] === 'dashboard' ? 'user_dashboard' : 'user_buku';
+        header("Location: index.php?page=$redirect");
         exit;
     }
 
