@@ -1,12 +1,18 @@
 <?php
 // Get database connection details from environment variables
-$raw_host = trim(getenv('DB_HOST') ?: ($_ENV['DB_HOST'] ?? 'localhost'));
-$user = trim(getenv('DB_USER') ?: ($_ENV['DB_USER'] ?? 'root'));
-$pass = trim(getenv('DB_PASSWORD') ?: ($_ENV['DB_PASSWORD'] ?? ''));
-$db = trim(getenv('DB_NAME') ?: ($_ENV['DB_NAME'] ?? 'db_perpustakaan'));
-$port = trim(getenv('DB_PORT') ?: ($_ENV['DB_PORT'] ?? '3306'));
+// Comprehensive environment variable lookup
+function get_db_config($key, $default = '')
+{
+    return getenv($key) ?: ($_ENV[$key] ?: ($_SERVER[$key] ?? $default));
+}
 
-// Aggressive cleaning to remove hidden characters or URI schemes
+$raw_host = trim(get_db_config('DB_HOST', 'localhost'));
+$user = trim(get_db_config('DB_USER', 'root'));
+$pass = get_db_config('DB_PASSWORD', get_db_config('DB_PASS', '')); // Check for both DB_PASSWORD and DB_PASS
+$db = trim(get_db_config('DB_NAME', 'db_perpustakaan'));
+$port = trim(get_db_config('DB_PORT', '3306'));
+
+// Aggressive cleaning for Host, User, Port (but NOT Password)
 $raw_host = preg_replace('/^mysql:\/\/|[^a-zA-Z0-9.:-]/', '', $raw_host);
 $user = preg_replace('/[^a-zA-Z0-9._-]/', '', $user);
 $port = preg_replace('/[^0-9]/', '', $port);
