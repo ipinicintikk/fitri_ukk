@@ -118,4 +118,4 @@ function confirmDeleteUser(id) {
 }
 </script>
 
-<?php include 'views/layouts/footer.php'; ?>
+<?php include BASE_PATH . '/views/layouts/footer.php'; ?>

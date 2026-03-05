@@ -86,4 +86,4 @@ function confirmPinjam(id, judul) {
 }
 </script>
 
-<?php include 'views/layouts/footer.php'; ?>
+<?php include BASE_PATH . '/views/layouts/footer.php'; ?>
