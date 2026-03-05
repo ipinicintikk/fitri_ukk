@@ -1,4 +1,4 @@
-<?php include 'views/layouts/header.php'; ?>
+<?php include BASE_PATH . '/views/layouts/header.php'; ?>
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="card p-4 shadow-lg" style="width: 500px; border-top: 5px solid var(--maroon-dark);">

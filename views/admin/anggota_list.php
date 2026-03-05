@@ -1,4 +1,4 @@
-<?php include 'views/layouts/header.php'; ?>
+<?php include BASE_PATH . '/views/layouts/header.php'; ?>
 
 <div class="container-fluid">
     <div class="row">

@@ -1,5 +1,5 @@
 <?php
-require_once 'models/Buku.php';
+require_once __DIR__ . '/../models/Buku.php';
 
 class BukuController
 {
@@ -20,7 +20,7 @@ class BukuController
         $total_pages = ceil($total_items / $limit);
 
         $books = $this->bukuModel->getAll($limit, $offset);
-        include 'views/admin/buku_list.php';
+        include __DIR__ . '/../views/admin/buku_list.php';
     }
 
     public function store()

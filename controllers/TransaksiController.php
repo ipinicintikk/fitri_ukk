@@ -1,5 +1,5 @@
 <?php
-require_once 'models/Transaksi.php';
+require_once __DIR__ . '/../models/Transaksi.php';
 
 class TransaksiController
 {
@@ -40,7 +40,7 @@ class TransaksiController
     public function userHistory()
     {
         $history = $this->transaksiModel->getUserHistory($_SESSION['user_id']);
-        include 'views/user/riwayat.php';
+        include __DIR__ . '/../views/user/riwayat.php';
     }
 
     public function allTransactions()
@@ -53,7 +53,7 @@ class TransaksiController
         $total_pages = ceil($total_items / $limit);
 
         $transactions = $this->transaksiModel->getAllTransactions($limit, $offset);
-        include 'views/admin/transaksi_list.php';
+        include __DIR__ . '/../views/admin/transaksi_list.php';
     }
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once 'models/Feedback.php';
+require_once __DIR__ . '/../models/Feedback.php';
 
 class FeedbackController
 {
@@ -13,7 +13,7 @@ class FeedbackController
     public function adminIndex()
     {
         $feedbacks = $this->feedbackModel->getAll();
-        include 'views/admin/feedback_list.php';
+        include __DIR__ . '/../views/admin/feedback_list.php';
     }
 
     public function store()
