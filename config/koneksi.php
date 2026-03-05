@@ -6,10 +6,10 @@ $pass = trim(getenv('DB_PASSWORD') ?: ($_ENV['DB_PASSWORD'] ?? ''));
 $db = trim(getenv('DB_NAME') ?: ($_ENV['DB_NAME'] ?? 'db_perpustakaan'));
 $port = trim(getenv('DB_PORT') ?: ($_ENV['DB_PORT'] ?? '3306'));
 
-// Parsing logic: if host contains mysql:// or includes :port
-if (strpos($raw_host, 'mysql://') === 0) {
-    $raw_host = substr($raw_host, 8);
-}
+// Aggressive cleaning to remove hidden characters or URI schemes
+$raw_host = preg_replace('/^mysql:\/\/|[^a-zA-Z0-9.:-]/', '', $raw_host);
+$user = preg_replace('/[^a-zA-Z0-9._-]/', '', $user);
+$port = preg_replace('/[^0-9]/', '', $port);
 
 // Separate host and port if host contains a colon (e.g. host:port)
 if (strpos($raw_host, ':') !== false) {
@@ -28,16 +28,25 @@ try {
         PDO::ATTR_EMULATE_PREPARES => false,
     ];
 
-    // Aiven requires SSL. This enables basic SSL for the connection.
+    // Aiven requires SSL
     if ($host !== 'localhost' && $host !== '127.0.0.1') {
-        $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false; // Set to true if you provide a CA cert
+        $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
     }
 
     $pdo = new PDO($dsn, $user, $pass, $options);
 }
 catch (PDOException $e) {
-    // Detailed error for debugging
-    $masked_host = $host;
-    die("Koneksi gagal: " . $e->getMessage() . " (Target: $masked_host:$port)");
+    // Debugging info (be careful with passwords in production)
+    $error_msg = $e->getMessage();
+    die("<h3>Koneksi Database Gagal</h3>
+         <p>Error: $error_msg</p>
+         <p><b>Tips Perbaikan:</b></p>
+         <ul>
+            <li>Cek apakah Hostname di Vercel sudah benar (tanpa spasi).</li>
+            <li>Cek apakah Aiven Service Status sudah 'Running'.</li>
+            <li>Pastikan IP <code>0.0.0.0/0</code> sudah di-whitelist di Aiven Console.</li>
+         </ul>
+         <hr>
+         Target: <code>$host:$port</code>");
 }
 ?>
