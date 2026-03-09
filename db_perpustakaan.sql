@@ -38,6 +38,16 @@ CREATE TABLE IF NOT EXISTS transaksi (
     INDEX (id_buku)
 ) ENGINE=InnoDB;
 
+-- Table feedback
+CREATE TABLE IF NOT EXISTS feedback (
+    id_feedback INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT NOT NULL,
+    isi_feedback TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
+    INDEX (id_user)
+) ENGINE=InnoDB;
+
 -- Default Admin Account (admin / admin123)
 -- MD5 for admin123 is 0192023a7bbd73250516f069df18b500
 INSERT INTO users (nama, username, password, role) 
