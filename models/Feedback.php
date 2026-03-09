@@ -6,6 +6,20 @@ class Feedback
     public function __construct($pdo)
     {
         $this->pdo = $pdo;
+        $this->ensureTableExists();
+    }
+
+    private function ensureTableExists()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS feedback (
+            id_feedback INT AUTO_INCREMENT PRIMARY KEY,
+            id_user INT NOT NULL,
+            isi_feedback TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
+            INDEX (id_user)
+        ) ENGINE=InnoDB";
+        $this->pdo->exec($sql);
     }
 
     public function getAll()
