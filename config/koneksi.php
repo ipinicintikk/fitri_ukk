@@ -26,6 +26,16 @@ else {
     $host = $raw_host;
 }
 
+// CHECK HOST RESOLUTION: If host is not resolvable and we are local, fallback to localhost
+if ($host !== 'localhost' && $host !== '127.0.0.1') {
+    $ip = gethostbyname($host);
+    if ($ip === $host) {
+        // DNS failed to resolve
+        $host = 'localhost';
+        $port = '3306';
+    }
+}
+
 try {
     $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
     $options = [
@@ -34,7 +44,7 @@ try {
         PDO::ATTR_EMULATE_PREPARES => false,
     ];
 
-    // Aiven requires SSL
+    // Aiven requires SSL, but don't use it for localhost
     if ($host !== 'localhost' && $host !== '127.0.0.1') {
         $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
     }
